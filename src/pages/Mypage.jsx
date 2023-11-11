@@ -95,6 +95,17 @@ const Town = styled.div`
   text-align: left;
 `;
 
+const Reservation = styled.div`
+  position: relative;
+  margin-top: 15px;
+  background-color: rgba(255, 255, 255, 0.5);
+  width: 360px;
+  height: 50px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(143, 143, 143, 0.2);
+  text-decoration: none;
+`
+
 const PostBox = styled.div`
   position: relative;
   background-color: rgba(255, 255, 255, 0.5);
@@ -197,6 +208,10 @@ function Mypage() {
     navigate("/");
   };
 
+  const handleCartClick = () => {
+    navigate("/cart");
+  };
+
   // 백엔드 연동 axios.get
   const [data, setData] = useState(null); // 단일 객체를 받기 위해 배열이 아닌 객체로 변경
   const { memberid } = useParams();
@@ -251,6 +266,11 @@ function Mypage() {
               <Name>{data.nickname}</Name>
               <Phone>{data.address}</Phone>
             </Box>
+
+            <Reservation onClick={handleCartClick}><p>장바구니</p></Reservation>
+
+            <Reservation><p>예약목록 조회</p></Reservation>
+
             <TownName>{data.nickname}</TownName>
             <Town>님이 찜한 가게</Town>
             <ScrollBox>

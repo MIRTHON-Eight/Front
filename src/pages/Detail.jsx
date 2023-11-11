@@ -95,9 +95,11 @@ function Detail() {
     const [liked, setLiked] = useState();
     const { store_id } = useParams();
 
+    const member_id = JSON.parse(localStorage.getItem('memberid'))
+
     // 데이터 GET
     useEffect(() => {
-        axios.get(`http://13.124.196.200:8081/api/bakery/${store_id}`)
+        axios.get(`http://13.124.196.200:8081/api/bakery/${member_id}/${store_id}`)
             .then((response) => {
                 console.log(response.data)
                 // nums가 초기화되지 않았을 때만 초기화
