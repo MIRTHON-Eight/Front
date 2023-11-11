@@ -284,12 +284,20 @@ function Home() {
           }
         );
 
-        console.log("Received data from API:", response.data);
-        console.log(token);
-        console.log(memberid);
+        console.log(response.data.result);
         setDatas(response.data.result);
+        console.log(datas.discount_list);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        if (error.response) {
+          // 서버가 응답한 상태 코드가 2xx 범위를 벗어난 경우
+          console.error('Server responded with a non-2xx status', error.response.data);
+        } else if (error.request) {
+          // 요청은 보냈지만 응답을 받지 못한 경우
+          console.error('No response received from the server', error.request);
+        } else {
+          // 요청을 보내기 전에 발생한 오류
+          console.error('Error before sending the request', error.message);
+        }
       }
     };
     fetchData();
@@ -339,7 +347,7 @@ function Home() {
         {/* 찜 api 연동하기 */}
         <HeartTown>마감세일 중인 빵집</HeartTown>
         <HeartBoxs>
-          {datas.map((data) => (
+          {datas.discount_list.map((data) => (
             <HeartBox
               key={data.store_id}
               onClick={() => onClickDetail(data.store_id)}
@@ -360,7 +368,7 @@ function Home() {
         {/* 우리동네빵집 */}
         <Town>우리 동네 빵집</Town>
         <ScrollBox>
-          {datas.map((data) => (
+          {datas.nearby_list.map((data) => (
             <PostBox
               key={data.store_id}
               onClick={() => onClickDetail(data.store_id)}

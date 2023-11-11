@@ -125,8 +125,26 @@ function Detail() {
             });
     }, []);
 
+    // 찜 post
     const handleLikeClick = () => {
         setLiked((prevLiked) => !prevLiked);
+        axios
+            .post(`http://13.124.196.200:8081/api/bakery/like/${member_id}/${store_id}`)
+            .then((response) => {
+                console.log(response)
+            })
+            .catch((error) => {
+                if (error.response) {
+                    // 서버가 응답한 상태 코드가 2xx 범위를 벗어난 경우
+                    console.error('Server responded with a non-2xx status', error.response.data);
+                } else if (error.request) {
+                    // 요청은 보냈지만 응답을 받지 못한 경우
+                    console.error('No response received from the server', error.request);
+                } else {
+                    // 요청을 보내기 전에 발생한 오류
+                    console.error('Error before sending the request', error.message);
+                }
+            });
     };
 
     // 예약 post
@@ -209,7 +227,7 @@ function Detail() {
                     <Modal>
                         <div>
                             <button className='close' onClick={() => setModalOpen(false)}>X</button>
-                            <h3>예약목록을 확인하고 시간을<br/>선택해주세요</h3>
+                            <h3>예약목록을 확인하고 시간을<br />선택해주세요</h3>
 
                             {data && data.menu_list && data.menu_list.map((menu, index) => (
                                 nums[index] > 0 && (
