@@ -190,7 +190,7 @@ const List = styled.div`
 
         h3 {
         margin-left: 1rem;
-        margin-right: 5rem;
+        padding-right: 4rem;
         font-size: 15px;
         font-weight: 500;
         }

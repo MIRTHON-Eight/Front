@@ -36,15 +36,13 @@ function Detail() {
     };
 
     const handleAddToCart = () => {
-        checkLoginStatus();
-
-        if (isLoggedIn) {
             if (data && data.menu_list) {
                 const cartItems = data.menu_list
                     .map((menu, index) => ({
                         storeName: data.store_name,
                         menuImg: menu.menu_img,
                         menuName: menu.menu_name,
+                        menuId: menu.menu_id,
                         price: menu.price,
                         quantity: nums[index],
                     }))
@@ -52,9 +50,6 @@ function Detail() {
                 localStorage.setItem('cart', JSON.stringify(cartItems));
             }
             setCartModalOpen(true);
-        } else {
-            setLoginModalOpen(true); // Open login modal
-        }
     };
 
 
@@ -66,29 +61,10 @@ function Detail() {
     const [loginModalOpen, setLoginModalOpen] = useState(false);
     const modalBackground = useRef();
 
-    // 로그인 확인
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const checkLoginStatus = () => {
-        const token = localStorage.getItem('token');
-        setIsLoggedIn(!!token);
-    };
-
-    const handleReservationClick = () => {
-        checkLoginStatus();
-
-        if (isLoggedIn) {
-            setModalOpen(true); // Open reservation modal
-        } else {
-            setLoginModalOpen(true); // Open login modal
-        }
-    };
 
     // 예약시간
     const [selectedTime, setSelectedTime] = useState('');
-    const handleReservation = () => {
-        setModalOpen(false);
-        setConfirmationModalOpen(true);
-    };
+
 
     // 데이터 변수
     const [data, setData] = useState(null);
@@ -108,8 +84,9 @@ function Detail() {
                     const initialNums = Array(response.data.result.menu_list.length).fill(0);
                     setNums(initialNums);
                 }
-                setLiked(response.data.result.is_liked);
                 setData(response.data.result);
+                setLiked(response.data.is_like);
+                console.log(response.data);
             })
             .catch((error) => {
                 if (error.response) {
@@ -126,8 +103,9 @@ function Detail() {
     }, []);
 
     // 찜 post
+    const navigate = useNavigate();
     const handleLikeClick = () => {
-        setLiked((prevLiked) => !prevLiked);
+        setLiked(true);
         axios
             .post(`http://13.124.196.200:8081/api/bakery/like/${member_id}/${store_id}`)
             .then((response) => {
@@ -148,25 +126,28 @@ function Detail() {
     };
 
     // 예약 post
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
+    const cartData = localStorage.getItem('cart');
+    const cart = cartData ? JSON.parse(cartData) : [];
+    const reservationData = cart.map(item => ({
+        id: item.menuId,
+        quantity: item.quantity,
+    }));
+    console.log(reservationData)
 
-    //     axios
-    //         .post('http://13.124.196.200:8081/api/reservations', {
-    //             userId: ,
-    //             storeId: bakeryId,
-    //             breadId: ,
-    //             breadType: ,
-    //             quantity: ,
-    //             pickUpTime: selectedTime 
-    //         })
-    //         .then((response) => {
-    //             navigate('/');
-    //         })
-    //         .catch((error) => {
-    //             console.error(error);
-    //         });
-    // };
+    const handleReservation = (e) => {
+        e.preventDefault();
+        axios
+            .post(`http://13.124.196.200:8081/api/reservations/${member_id}`, reservationData)
+            .then((response) => {
+                navigate('/');
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+        setModalOpen(false);
+        setConfirmationModalOpen(true);
+    };
 
     return (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -219,7 +200,7 @@ function Detail() {
                 </Breads>
 
                 <Button>
-                    <Reservation onClick={handleReservationClick}>예약하기</Reservation>
+                    <Reservation onClick={() => setModalOpen(true)}>예약하기</Reservation>
                     <Reservation onClick={handleAddToCart}>장바구니 담기</Reservation>
                 </Button>
 

@@ -190,7 +190,6 @@ const Address = styled.div`
   text-align: left;
 `;
 
-//하단 바
 const BottomBar = styled.div`
   background-color: #fff7f0;
   height: 52px;
@@ -198,6 +197,11 @@ const BottomBar = styled.div`
   position: fixed;
   bottom: 0;
   box-shadow: 0px -4px 6px rgba(177, 177, 177, 0.2); /* Use a negative margin-top to create the shadow effect on the bottom bar. */
+
+  a {
+    text-decoration: none; /* 이 부분을 추가하여 밑줄 없앰 */
+    color: inherit; /* 링크 색상을 상위 요소의 색상으로 상속 */
+  }
 `;
 
 const BottomName = styled.div`
@@ -388,12 +392,17 @@ function Home() {
         </ScrollBox>
 
         {/* 하단바 */}
+
+
+
         <BottomBar>
-          <BottomName>
-            <img src={bv} />
-          </BottomName>
-          <Content>우리가 왜 사용해야할까?</Content>
-          <Content2>그 해답은 클릭하여 확인해 주세요</Content2>
+          <Link to='/bver'>
+            <BottomName>
+              <img src={bv} />
+            </BottomName>
+            <Content>우리가 왜 사용해야할까?</Content>
+            <Content2>그 해답은 클릭하여 확인해 주세요</Content2>
+          </Link>
         </BottomBar>
       </Container>
     </motion.div>
