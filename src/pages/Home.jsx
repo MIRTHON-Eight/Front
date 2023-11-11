@@ -302,8 +302,12 @@ function Home() {
 
   //회원 정보에 따라 마이페이지 내용 변경
   const memberid = localStorage.getItem("memberid");
-  const onClickMy = () => {
-    navigate(`/Mypage/${memberid}`);
+  const onClickMy = (memberid) => {
+    if (memberid == null) {
+      navigate("/Login");
+    } else {
+      navigate(`/Mypage/${memberid}`);
+    }
   };
 
   return (
@@ -316,7 +320,7 @@ function Home() {
         <Top>
           <img src={logo} alt="Bver" />
         </Top>
-        <HomeImg key={memberid} onClick={onClickMy}>
+        <HomeImg key={memberid} onClick={() => onClickMy(memberid)}>
           <img src={account} alt="account" />
         </HomeImg>
 

@@ -202,7 +202,7 @@ function Mypage() {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `http://13.124.196.200:8081/api/bakery/${memberid}`,
+          `http://13.124.196.200:8081/api/members/${memberid}`,
           {
             headers: {
               Authorization: `Token ${token}`,
