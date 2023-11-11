@@ -38,6 +38,7 @@ export const Container = styled.div`
     
     .body {
         //min-height: calc(100vh - 145px);
+        cursor: none;
         .scrollbox {
         overflow-y: scroll;
         overflow-x: hidden;
@@ -47,4 +48,6 @@ export const Container = styled.div`
         }
         }
     }
+
+    
 `;

@@ -45,7 +45,7 @@ const Box = styled.div`
   position: relative;
   margin-top: 25px;
   background-color: rgba(255, 255, 255, 0.5);
-  width: 360px;
+  width: 340px;
   height: 100px;
   border-radius: 10px;
   box-shadow: 0px 4px 6px rgba(105, 105, 105, 0.2);
@@ -96,7 +96,7 @@ const TownName = styled.div`
   position: relative;
   font-size: 16px;
   font-weight: 600;
-  margin-left: -290px;
+  margin-left: -285px;
   margin-top: 30px;
   margin-bottom: 0px;
   text-align: left;
@@ -115,7 +115,7 @@ const Reservation = styled.div`
   position: relative;
   margin-top: 15px;
   background-color: rgba(255, 255, 255, 0.5);
-  width: 360px;
+  width: 340px;
   height: 50px;
   border-radius: 10px;
   box-shadow: 0px 4px 6px rgba(143, 143, 143, 0.2);
@@ -125,7 +125,7 @@ const Reservation = styled.div`
 const PostBox = styled.div`
   position: relative;
   background-color: rgba(255, 255, 255, 0.5);
-  height: 135px;
+  height: 60px;
   border-radius: 10px;
   margin-top: 10px;
   box-shadow: 0px 2px 4px rgba(107, 107, 107, 0.2);
@@ -151,7 +151,7 @@ const PostImg = styled.div`
 `;
 
 const ScrollBox = styled.div`
-  width: 350px;
+  width: 340px;
   height: 350px;
   margin-top: 0.2rem;
   overflow-y: scroll;
@@ -166,7 +166,7 @@ const ScrollBox = styled.div`
 
 const ScrollBox1 = styled.div`
   width: 350px;
-  height: 280px;
+  height: 280=px;
   margin-top: 0.2rem;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -192,34 +192,12 @@ const Name_b = styled.div`
 
 const Name_b1 = styled.div`
   position: relative;
-  top: 10px;
+  top: 20px;
   left: 23px;
   color: #000000;
   font-size: 15px;
   font-style: normal;
   font-weight: bold;
-  line-height: normal;
-  text-align: left;
-`;
-
-const BreadName = styled.div`
-  position: relative;
-  top: 10px;
-  left: 23px;
-  color: #000000;
-  font-size: 15px;
-  font-style: normal;
-  line-height: normal;
-  text-align: left;
-`;
-
-const BreadNum = styled.div`
-  position: relative;
-  top: -8px;
-  left: 100px;
-  color: #000000;
-  font-size: 15px;
-  font-style: normal;
   line-height: normal;
   text-align: left;
 `;
@@ -237,7 +215,7 @@ const Address = styled.div`
 
 const Address1 = styled.div`
   position: relative;
-  top: -5px;
+  top: -10px;
   left: -20px;
   color: black;
   font-size: 11px;
@@ -337,6 +315,7 @@ function Mypage() {
   const onClickDetail = (store_id) => {
     navigate(`/Detail/${store_id}`); // 해당 게시글의 ID를 URL에 포함하여 이동
   };
+  
 
   const handleLogoutClick = () => {
     localStorage.removeItem("token");
@@ -385,14 +364,9 @@ function Mypage() {
                 reser.map((datas) => (
                   <PostBox
                     key={datas.store_id}
-                    onClick={() => onClickDetail(datas.store_id)}
                   >
                     <Name_b1>{datas.store_name}</Name_b1>
                     <Address1>{datas.created_at}</Address1>
-
-                    {/* 여기 빵 연동하셈 */}
-                    <BreadName>단팥빵</BreadName>
-                    <BreadNum>4</BreadNum>
                   </PostBox>
                 ))}
             </ScrollBox1>

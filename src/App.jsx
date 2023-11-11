@@ -7,8 +7,6 @@ import Cart from "./pages/Cart";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Mypage from "./pages/Mypage";
-import Bver from './pages/Bver';
-//import firebase from '../public/firebaseConfig'
 
 function App() {
   return (
@@ -22,7 +20,6 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/Mypage/:memberid" element={<Mypage />} />
-            <Route path="/bver" element={<Bver />} />
           </Routes>
         </AnimatePresence>
       </Router>
