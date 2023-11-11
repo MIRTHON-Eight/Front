@@ -274,6 +274,7 @@ function Home() {
       try {
         const token = localStorage.getItem("token");
         const memberid = localStorage.getItem("memberid");
+        const cart = localStorage.getItem("cart");
         const response = await axios.get(
           "http://13.124.196.200:8081/api/bakery",
           {
@@ -286,17 +287,22 @@ function Home() {
 
         console.log(response.data.result);
         setDatas(response.data.result);
-        console.log(datas.discount_list);
+        console.log(token);
+        console.log(memberid);
+        console.log(cart);
       } catch (error) {
         if (error.response) {
           // 서버가 응답한 상태 코드가 2xx 범위를 벗어난 경우
-          console.error('Server responded with a non-2xx status', error.response.data);
+          console.error(
+            "Server responded with a non-2xx status",
+            error.response.data
+          );
         } else if (error.request) {
           // 요청은 보냈지만 응답을 받지 못한 경우
-          console.error('No response received from the server', error.request);
+          console.error("No response received from the server", error.request);
         } else {
           // 요청을 보내기 전에 발생한 오류
-          console.error('Error before sending the request', error.message);
+          console.error("Error before sending the request", error.message);
         }
       }
     };
@@ -304,7 +310,7 @@ function Home() {
   }, []);
 
   // 빵집 박스 클릭하면 해당 id의 빵집 세부로 넘어가도록
-  const member_id = JSON.parse(localStorage.getItem('memberid'))
+  const member_id = JSON.parse(localStorage.getItem("memberid"));
   const onClickDetail = (store_id) => {
     navigate(`/detail/${member_id}/${store_id}`); // 해당 게시글의 ID를 URL에 포함하여 이동
   };
@@ -348,43 +354,55 @@ function Home() {
         {/* 찜 api 연동하기 */}
         <HeartTown>마감세일 중인 빵집</HeartTown>
         <HeartBoxs>
-          {datas && datas.discount_list && datas.discount_list.map((data) => (
-            <HeartBox
-              key={data.store_id}
-              onClick={() => onClickDetail(data.store_id)}
-            >
-              <HeartImg>
-                <img
-                  src={data.store_img}
-                  alt="Profile"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }} // 이미지 크기와 픽셀 사용 방식 설정
-                />
-              </HeartImg>
-              <HeartName>{data.store_name}</HeartName>
-            </HeartBox>
-          ))}
+          {datas &&
+            datas.discount_list &&
+            datas.discount_list.map((data) => (
+              <HeartBox
+                key={data.store_id}
+                onClick={() => onClickDetail(data.store_id)}
+              >
+                <HeartImg>
+                  <img
+                    src={data.store_img}
+                    alt="Profile"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }} // 이미지 크기와 픽셀 사용 방식 설정
+                  />
+                </HeartImg>
+                <HeartName>{data.store_name}</HeartName>
+              </HeartBox>
+            ))}
         </HeartBoxs>
 
         {/* 이 부분 백엔드 연동중임 */}
         {/* 우리동네빵집 */}
         <Town>우리 동네 빵집</Town>
         <ScrollBox>
-          {datas && datas.nearby_list && datas.nearby_list.map((data) => (
-            <PostBox
-              key={data.store_id}
-              onClick={() => onClickDetail(data.store_id)}
-            >
-              <PostImg>
-                <img
-                  src={data.store_img}
-                  alt="Profile"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }} // 이미지 크기와 픽셀 사용 방식 설정
-                />
-              </PostImg>
-              <Name>{data.store_name}</Name>
-              <Address>{data.location}</Address>
-            </PostBox>
-          ))}
+          {datas &&
+            datas.nearby_list &&
+            datas.nearby_list.map((data) => (
+              <PostBox
+                key={data.store_id}
+                onClick={() => onClickDetail(data.store_id)}
+              >
+                <PostImg>
+                  <img
+                    src={data.store_img}
+                    alt="Profile"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }} // 이미지 크기와 픽셀 사용 방식 설정
+                  />
+                </PostImg>
+                <Name>{data.store_name}</Name>
+                <Address>{data.location}</Address>
+              </PostBox>
+            ))}
         </ScrollBox>
 
         {/* 하단바 */}

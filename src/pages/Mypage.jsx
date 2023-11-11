@@ -69,6 +69,22 @@ const Name = styled.div`
   text-align: left;
 `;
 
+const Logout = styled.div`
+  font-size: 10px;
+  text-shadow: 2px 2px 4px rgba(172, 172, 172, 0.1);
+  margin-top: -40px;
+  margin-left: 150px;
+  text-align: left;
+
+  .link {
+    cursor: pointer;
+    margin-right: 10px;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
 const Phone = styled.div`
   font-size: 15px;
   margin-top: 4px;
@@ -91,7 +107,7 @@ const Town = styled.div`
   position: relative;
   font-size: 12px;
   margin-top: -18px;
-  margin-left: -190px;
+  margin-left: -200px;
   text-align: left;
 `;
 
@@ -104,9 +120,19 @@ const Reservation = styled.div`
   border-radius: 10px;
   box-shadow: 0px 4px 6px rgba(143, 143, 143, 0.2);
   text-decoration: none;
-`
+`;
 
 const PostBox = styled.div`
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.5);
+  height: 135px;
+  border-radius: 10px;
+  margin-top: 10px;
+  box-shadow: 0px 2px 4px rgba(107, 107, 107, 0.2);
+  cursor: pointer;
+`;
+
+const PostBox1 = styled.div`
   position: relative;
   background-color: rgba(255, 255, 255, 0.5);
   height: 80px;
@@ -138,6 +164,20 @@ const ScrollBox = styled.div`
   padding-bottom: 20px;
 `;
 
+const ScrollBox1 = styled.div`
+  width: 350px;
+  height: 280px;
+  margin-top: 0.2rem;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  &::-webkit-scrollbar {
+    /* WebKit 브라우저의 스크롤바를 숨김 */
+    width: 0;
+    background: transparent;
+  }
+  padding-bottom: 20px;
+`;
+
 const Name_b = styled.div`
   position: relative;
   top: -55px;
@@ -146,6 +186,40 @@ const Name_b = styled.div`
   font-size: 15px;
   font-style: normal;
   font-weight: bold;
+  line-height: normal;
+  text-align: left;
+`;
+
+const Name_b1 = styled.div`
+  position: relative;
+  top: 10px;
+  left: 23px;
+  color: #000000;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: bold;
+  line-height: normal;
+  text-align: left;
+`;
+
+const BreadName = styled.div`
+  position: relative;
+  top: 10px;
+  left: 23px;
+  color: #000000;
+  font-size: 15px;
+  font-style: normal;
+  line-height: normal;
+  text-align: left;
+`;
+
+const BreadNum = styled.div`
+  position: relative;
+  top: -8px;
+  left: 100px;
+  color: #000000;
+  font-size: 15px;
+  font-style: normal;
   line-height: normal;
   text-align: left;
 `;
@@ -159,6 +233,17 @@ const Address = styled.div`
   font-style: normal;
   line-height: normal;
   text-align: left;
+`;
+
+const Address1 = styled.div`
+  position: relative;
+  top: -5px;
+  left: -20px;
+  color: black;
+  font-size: 11px;
+  font-style: normal;
+  line-height: normal;
+  text-align: right;
 `;
 
 const Heart = styled.div`
@@ -215,11 +300,13 @@ function Mypage() {
   // 백엔드 연동 axios.get
   const [data, setData] = useState(null); // 단일 객체를 받기 위해 배열이 아닌 객체로 변경
   const { memberid } = useParams();
+  const [reser, setReser] = useState(null);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(
+        const response1 = await axios.get(
           `http://13.124.196.200:8081/api/members/${memberid}`,
           {
             headers: {
@@ -229,9 +316,16 @@ function Mypage() {
           }
         );
 
-        console.log("Received data from API:", response.data);
+        const response2 = await axios.get(
+          `http://13.124.196.200:8081/api/reservations/list/${memberid}`
+        );
+
+        console.log("Received data from API:", response1.data);
         console.log(token);
-        setData(response.data.result); // 배열이 아닌 객체로 설정한 경우 변경
+        console.log(response1.data.result);
+        console.log(response2.data.result);
+        setData(response1.data.result); // 배열이 아닌 객체로 설정한 경우 변경
+        setReser(response2.data.result);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -242,6 +336,13 @@ function Mypage() {
   // 빵집 박스 클릭하면 해당 id의 빵집 세부로 넘어가도록
   const onClickDetail = (store_id) => {
     navigate(`/Detail/${store_id}`); // 해당 게시글의 ID를 URL에 포함하여 이동
+  };
+
+  const handleLogoutClick = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("memberid");
+    localStorage.removeItem("cart");
+    navigate("/");
   };
 
   return (
@@ -263,40 +364,69 @@ function Mypage() {
               <Profile>
                 <img src={account} />
               </Profile>
-              <Name>{data.nickname}</Name>
-              <Phone>{data.address}</Phone>
+              <Name>{data.member_info_res.nickname}</Name>
+              <Phone>{data.member_info_res.address}</Phone>
+              <Logout>
+                <span className="link" onClick={handleLogoutClick}>
+                  로그아웃
+                </span>
+              </Logout>
             </Box>
 
-            <Reservation onClick={handleCartClick}><p>장바구니</p></Reservation>
+            <Reservation onClick={handleCartClick}>
+              <p>장바구니</p>
+            </Reservation>
 
-            <Reservation><p>예약목록 조회</p></Reservation>
+            <TownName>{data.member_info_res.nickname}</TownName>
+            <Town>님의 예약목록</Town>
+            <ScrollBox1>
+              {/* 연동 */}
+              {reser &&
+                reser.map((datas) => (
+                  <PostBox
+                    key={datas.store_id}
+                    onClick={() => onClickDetail(datas.store_id)}
+                  >
+                    <Name_b1>{datas.store_name}</Name_b1>
+                    <Address1>{datas.created_at}</Address1>
 
-            <TownName>{data.nickname}</TownName>
+                    {/* 여기 빵 연동하셈 */}
+                    <BreadName>단팥빵</BreadName>
+                    <BreadNum>4</BreadNum>
+                  </PostBox>
+                ))}
+            </ScrollBox1>
+
+            <TownName>{data.member_info_res.nickname}</TownName>
             <Town>님이 찜한 가게</Town>
             <ScrollBox>
               {/* 연동 */}
-              <PostBox
-                key={data.store_id}
-                onClick={() => onClickDetail(data.store_id)}
-              >
-                <PostImg>
-                  <img
-                    //   src={`${process.env.PUBLIC_URL}/images/imgupload_post1.svg`}
-                    src={bread}
-                    alt="Profile"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }} // 이미지 크기와 픽셀 사용 방식 설정
-                  />
-                </PostImg>
-                <Name_b>{data.store_name}</Name_b>
-                <Address>{data.address}</Address>
-                <Heart>
-                  <img src={heart} />
-                </Heart>
-              </PostBox>
+              {data &&
+                data.my_bakery_list &&
+                data.my_bakery_list.map((datas) => (
+                  <PostBox1
+                    key={datas.store_id}
+                    onClick={() => onClickDetail(datas.store_id)}
+                  >
+                    <PostImg>
+                      <img
+                        //   src={`${process.env.PUBLIC_URL}/images/imgupload_post1.svg`}
+                        src={datas.store_img}
+                        alt="Profile"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }} // 이미지 크기와 픽셀 사용 방식 설정
+                      />
+                    </PostImg>
+                    <Name_b>{datas.store_name}</Name_b>
+                    <Address>{datas.location}</Address>
+                    <Heart>
+                      <img src={heart} />
+                    </Heart>
+                  </PostBox1>
+                ))}
             </ScrollBox>
             <BottomBar>
               <BottomName>
