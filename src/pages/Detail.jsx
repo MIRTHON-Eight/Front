@@ -36,22 +36,25 @@ function Detail() {
     };
 
     const handleAddToCart = () => {
-        if (data && data.menu_list) {
-            // Filter out items with quantity 0
-            const cartItems = data.menu_list
-                .map((menu, index) => ({
-                    storeName: data.store_name,
-                    menuImg: menu.menu_img,
-                    menuName: menu.menu_name,
-                    price: menu.price,
-                    quantity: nums[index],
-                }))
-                .filter(item => item.quantity > 0);
+        checkLoginStatus();
 
-            // Update local storage with the cart items
-            localStorage.setItem('cart', JSON.stringify(cartItems));
+        if (isLoggedIn) {
+            if (data && data.menu_list) {
+                const cartItems = data.menu_list
+                    .map((menu, index) => ({
+                        storeName: data.store_name,
+                        menuImg: menu.menu_img,
+                        menuName: menu.menu_name,
+                        price: menu.price,
+                        quantity: nums[index],
+                    }))
+                    .filter(item => item.quantity > 0);
+                localStorage.setItem('cart', JSON.stringify(cartItems));
+            }
+            setCartModalOpen(true);
+        } else {
+            setLoginModalOpen(true); // Open login modal
         }
-        setCartModalOpen(true);
     };
 
 
@@ -60,7 +63,25 @@ function Detail() {
     const [modalOpen, setModalOpen] = useState(false);
     const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
     const [cartModalOpen, setCartModalOpen] = useState(false);
+    const [loginModalOpen, setLoginModalOpen] = useState(false);
     const modalBackground = useRef();
+
+    // 로그인 확인
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const checkLoginStatus = () => {
+        const token = localStorage.getItem('token');
+        setIsLoggedIn(!!token);
+    };
+
+    const handleReservationClick = () => {
+        checkLoginStatus();
+
+        if (isLoggedIn) {
+            setModalOpen(true); // Open reservation modal
+        } else {
+            setLoginModalOpen(true); // Open login modal
+        }
+    };
 
     // 예약시간
     const [selectedTime, setSelectedTime] = useState('');
@@ -178,7 +199,7 @@ function Detail() {
                 </Breads>
 
                 <Button>
-                    <Reservation onClick={() => setModalOpen(true)}>예약하기</Reservation>
+                    <Reservation onClick={handleReservationClick}>예약하기</Reservation>
                     <Reservation onClick={handleAddToCart}>장바구니 담기</Reservation>
                 </Button>
 
@@ -186,7 +207,7 @@ function Detail() {
                     <Modal>
                         <div>
                             <button className='close' onClick={() => setModalOpen(false)}>X</button>
-                            <h3>예약목록을 확인하고 시간을 선택해주세요</h3>
+                            <h3>예약목록을 확인하고 시간을<br/>선택해주세요</h3>
 
                             {data && data.menu_list && data.menu_list.map((menu, index) => (
                                 nums[index] > 0 && (
@@ -223,7 +244,7 @@ function Detail() {
                 {cartModalOpen && (
                     <Modal>
                         <div>
-                            <Link to={'/'}><button className='close' onClick={() => setModalOpen(false)}>X</button></Link>
+                            <button className='close' onClick={() => setCartModalOpen(false)}>X</button>
                             <h3>예약목록을 확인해주세요</h3>
 
                             {data && data.menu_list && data.menu_list.map((menu, index) => (
@@ -232,6 +253,17 @@ function Detail() {
                                 )
                             ))}
                             <button className='reservation' onClick={() => setCartModalOpen(false)}>장바구니 담기</button>
+                        </div>
+                    </Modal>
+                )}
+
+                {loginModalOpen && (
+                    <Modal>
+                        <div>
+                            <button className='close' onClick={() => setLoginModalOpen(false)}>X</button>
+                            <h3>로그인이 필요한서비스입니다</h3>
+                            <h3>로그인하시겠습니까?</h3>
+                            <Link to='/login'><button className='reservation'>로그인</button></Link>
                         </div>
                     </Modal>
                 )}
@@ -266,8 +298,9 @@ const Modal = styled.div`
     }
 
     h3 {
-        width: 10rem;
+        width: 11rem;
         margin: 0;
+        margin-top: 0.5rem;
         margin-bottom: 0.5rem;
         font-size: 14px;
     }
