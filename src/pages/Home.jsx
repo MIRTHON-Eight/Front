@@ -347,7 +347,7 @@ function Home() {
         {/* 찜 api 연동하기 */}
         <HeartTown>마감세일 중인 빵집</HeartTown>
         <HeartBoxs>
-          {datas.discount_list.map((data) => (
+          {datas && datas.discount_list && datas.discount_list.map((data) => (
             <HeartBox
               key={data.store_id}
               onClick={() => onClickDetail(data.store_id)}
@@ -368,7 +368,7 @@ function Home() {
         {/* 우리동네빵집 */}
         <Town>우리 동네 빵집</Town>
         <ScrollBox>
-          {datas.nearby_list.map((data) => (
+          {datas && datas.nearby_list && datas.nearby_list.map((data) => (
             <PostBox
               key={data.store_id}
               onClick={() => onClickDetail(data.store_id)}
