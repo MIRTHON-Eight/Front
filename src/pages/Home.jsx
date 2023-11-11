@@ -304,6 +304,7 @@ function Home() {
   const memberid = localStorage.getItem("memberid");
   const onClickMy = (memberid) => {
     if (memberid == null) {
+      alert("회원정보가 없습니다.");
       navigate("/Login");
     } else {
       navigate(`/Mypage/${memberid}`);
@@ -360,7 +361,7 @@ function Home() {
             >
               <PostImg>
                 <img
-                  src={`${data.writerProfile}`}
+                  src={data.store_img}
                   alt="Profile"
                   style={{ width: "100%", height: "100%", objectFit: "cover" }} // 이미지 크기와 픽셀 사용 방식 설정
                 />
