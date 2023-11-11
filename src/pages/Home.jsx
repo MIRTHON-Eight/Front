@@ -336,18 +336,24 @@ function Home() {
         </Adver>
 
         {/* 마감세일중인 빵집 */}
+        {/* 찜 api 연동하기 */}
         <HeartTown>마감세일 중인 빵집</HeartTown>
         <HeartBoxs>
-          <HeartBox>
-            <HeartImg>
-              <img
-                src={bread}
-                alt="Profile"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }} // 이미지 크기와 픽셀 사용 방식 설정
-              />
-            </HeartImg>
-            <HeartName>오늘의 제빵소</HeartName>
-          </HeartBox>
+          {datas.map((data) => (
+            <HeartBox
+              key={data.store_id}
+              onClick={() => onClickDetail(data.store_id)}
+            >
+              <HeartImg>
+                <img
+                  src={data.store_img}
+                  alt="Profile"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }} // 이미지 크기와 픽셀 사용 방식 설정
+                />
+              </HeartImg>
+              <HeartName>{data.store_name}</HeartName>
+            </HeartBox>
+          ))}
         </HeartBoxs>
 
         {/* 이 부분 백엔드 연동중임 */}

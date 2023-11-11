@@ -162,7 +162,7 @@ function Login() {
           />
           <p>비밀번호</p>
           <input
-            type="text"
+            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="비밀번호를 입력해주세요."
