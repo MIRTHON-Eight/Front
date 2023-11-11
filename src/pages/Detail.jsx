@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import styled from "styled-components";
 import back from '../assets/back.png'
 import logo from '../assets/logo_detail.png'
-import cart from '../assets/cart.png'
+import cartimg from '../assets/cart.png'
 import heart from '../assets/heart.png'
 import emptyheart from '../assets/emptyheart.png'
 import arrow from '../assets/arrow.png'
@@ -155,7 +155,7 @@ function Detail() {
                 <Header>
                     <img src={back} alt="back" />
                     <Link to={'/'}><img src={logo} alt="Bver" /></Link>
-                    <Link to={'/cart'}><img className='cart' src={cart} alt="cart" /></Link>
+                    <Link to={'/cart'}><img className='cart' src={cartimg} alt="cart" /></Link>
                 </Header>
 
                 <Banner>
