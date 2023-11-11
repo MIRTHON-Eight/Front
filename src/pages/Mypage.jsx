@@ -3,6 +3,7 @@ import { Container } from "../styles/global";
 import { motion } from "framer-motion";
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../assets/logo.png";
 import back from "../assets/back.png";
@@ -10,7 +11,6 @@ import account from "../assets/account.svg";
 import bread from "../assets/bread.jpg";
 import heart from "../assets/Favorite.svg";
 import bv from "../assets/bv.png";
-import cart from "../assets/cart.png";
 
 const Back = styled.header`
   display: flex;
@@ -92,17 +92,6 @@ const Town = styled.div`
   text-align: left;
 `;
 
-const Reservation = styled.div`
-  position: relative;
-  margin-top: 15px;
-  background-color: rgba(255, 255, 255, 0.5);
-  width: 360px;
-  height: 50px;
-  border-radius: 10px;
-  box-shadow: 0px 4px 6px rgba(143, 143, 143, 0.2);
-  text-decoration: none;
-`
-
 const PostBox = styled.div`
   position: relative;
   background-color: rgba(255, 255, 255, 0.5);
@@ -123,7 +112,7 @@ const PostImg = styled.div`
 
 const ScrollBox = styled.div`
   width: 350px;
-  height: 440px;
+  height: 350px;
   margin-top: 0.2rem;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -205,12 +194,36 @@ function Mypage() {
     navigate("/");
   };
 
-  const handleDetailClick = () => {
-    navigate("/detail");
-  };
+  // 백엔드 연동 axios.get
+  const [datas, setDatas] = useState([]);
+  const { memberid } = useParams();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          `http://13.124.196.200:8081/api/bakery/${memberid}`,
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
 
-  const handleCartClick = () => {
-    navigate("/cart");
+        console.log("Received data from API:", response.data);
+        console.log(token);
+        setDatas(response.data.result);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // 빵집 박스 클릭하면 해당 id의 빵집 세부로 넘어가도록
+  const onClickDetail = (store_id) => {
+    navigate(`/Detail/${store_id}`); // 해당 게시글의 ID를 URL에 포함하여 이동
   };
 
   return (
@@ -220,173 +233,61 @@ function Mypage() {
       exit={{ opacity: 0 }}
     >
       <Container>
-        <Back onClick={handleHomeClick}>
-          <img src={back} alt="back" />
-        </Back>
-        <Logo>
-          <img src={logo} alt="Bver" />
-        </Logo>
-        <Box>
-          <Profile>
-            <img src={account} />
-          </Profile>
-          <Name>김서진</Name>
-          <Phone>서울특별시 성북구 화랑로13길 60</Phone>
-        </Box>
-
-        <Reservation onClick={handleCartClick}><p>장바구니</p></Reservation>
-
-        <Reservation><p>예약목록 조회</p></Reservation>
-
-        <TownName>김서진</TownName>
-        <Town>님이 찜한 가게</Town>
-        <ScrollBox>
-          <PostBox onClick={handleDetailClick}>
-            <PostImg>
-              <img
-                //   src={`${process.env.PUBLIC_URL}/images/imgupload_post1.svg`}
-                src={bread}
-                alt="Profile"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }} // 이미지 크기와 픽셀 사용 방식 설정
-              />
-            </PostImg>
-            <Name_b>오늘의 제빵소</Name_b>
-            <Address>경기도 구리시 벌말로 128번길 13</Address>
-            <Heart>
-              <img src={heart} />
-            </Heart>
-          </PostBox>
-          {/* 이 뒤부터 삭제하셈 */}
-          <PostBox onClick={handleDetailClick}>
-            <PostImg>
-              <img
-                //   src={`${process.env.PUBLIC_URL}/images/imgupload_post1.svg`}
-                src={bread}
-                alt="Profile"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }} // 이미지 크기와 픽셀 사용 방식 설정
-              />
-            </PostImg>
-            <Name_b>오늘의 제빵소</Name_b>
-            <Address>경기도 구리시 벌말로 128번길 13</Address>
-            <Heart>
-              <img src={heart} />
-            </Heart>
-          </PostBox>
-          <PostBox onClick={handleDetailClick}>
-            <PostImg>
-              <img
-                //   src={`${process.env.PUBLIC_URL}/images/imgupload_post1.svg`}
-                src={bread}
-                alt="Profile"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }} // 이미지 크기와 픽셀 사용 방식 설정
-              />
-            </PostImg>
-            <Name_b>오늘의 제빵소</Name_b>
-            <Address>경기도 구리시 벌말로 128번길 13</Address>
-            <Heart>
-              <img src={heart} />
-            </Heart>
-          </PostBox>
-          <PostBox onClick={handleDetailClick}>
-            <PostImg>
-              <img
-                //   src={`${process.env.PUBLIC_URL}/images/imgupload_post1.svg`}
-                src={bread}
-                alt="Profile"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }} // 이미지 크기와 픽셀 사용 방식 설정
-              />
-            </PostImg>
-            <Name_b>오늘의 제빵소</Name_b>
-            <Address>경기도 구리시 벌말로 128번길 13</Address>
-            <Heart>
-              <img src={heart} />
-            </Heart>
-          </PostBox>
-          <PostBox onClick={handleDetailClick}>
-            <PostImg>
-              <img
-                //   src={`${process.env.PUBLIC_URL}/images/imgupload_post1.svg`}
-                src={bread}
-                alt="Profile"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }} // 이미지 크기와 픽셀 사용 방식 설정
-              />
-            </PostImg>
-            <Name_b>오늘의 제빵소</Name_b>
-            <Address>경기도 구리시 벌말로 128번길 13</Address>
-            <Heart>
-              <img src={heart} />
-            </Heart>
-          </PostBox>
-          <PostBox onClick={handleDetailClick}>
-            <PostImg>
-              <img
-                //   src={`${process.env.PUBLIC_URL}/images/imgupload_post1.svg`}
-                src={bread}
-                alt="Profile"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }} // 이미지 크기와 픽셀 사용 방식 설정
-              />
-            </PostImg>
-            <Name_b>오늘의 제빵소</Name_b>
-            <Address>경기도 구리시 벌말로 128번길 13</Address>
-            <Heart>
-              <img src={heart} />
-            </Heart>
-          </PostBox>
-          <PostBox onClick={handleDetailClick}>
-            <PostImg>
-              <img
-                //   src={`${process.env.PUBLIC_URL}/images/imgupload_post1.svg`}
-                src={bread}
-                alt="Profile"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }} // 이미지 크기와 픽셀 사용 방식 설정
-              />
-            </PostImg>
-            <Name_b>오늘의 제빵소</Name_b>
-            <Address>경기도 구리시 벌말로 128번길 13</Address>
-            <Heart>
-              <img src={heart} />
-            </Heart>
-          </PostBox>
-          <PostBox onClick={handleDetailClick}>
-            <PostImg>
-              <img
-                //   src={`${process.env.PUBLIC_URL}/images/imgupload_post1.svg`}
-                src={bread}
-                alt="Profile"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }} // 이미지 크기와 픽셀 사용 방식 설정
-              />
-            </PostImg>
-            <Name_b>오늘의 제빵소</Name_b>
-            <Address>경기도 구리시 벌말로 128번길 13</Address>
-            <Heart>
-              <img src={heart} />
-            </Heart>
-          </PostBox>
-          <PostBox onClick={handleDetailClick}>
-            <PostImg>
-              <img
-                //   src={`${process.env.PUBLIC_URL}/images/imgupload_post1.svg`}
-                src={bread}
-                alt="Profile"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }} // 이미지 크기와 픽셀 사용 방식 설정
-              />
-            </PostImg>
-            <Name_b>오늘의 제빵소</Name_b>
-            <Address>경기도 구리시 벌말로 128번길 13</Address>
-            <Heart>
-              <img src={heart} />
-            </Heart>
-          </PostBox>
-        </ScrollBox>
-        <BottomBar>
-          <BottomName>
-            <img src={bv} />
-          </BottomName>
-          <Content>우리가 왜 사용해야할까?</Content>
-          <Content2>그 해답은 클릭하여 확인해 주세요</Content2>
-        </BottomBar>
+        {datas.length > 0 &&
+          datas.map((data) => (
+            <>
+              <Back onClick={handleHomeClick}>
+                <img src={back} alt="back" />
+              </Back>
+              <Logo>
+                <img src={logo} alt="Bver" />
+              </Logo>
+              <Box>
+                <Profile>
+                  <img src={account} />
+                </Profile>
+                <Name>{data.result.nickname}</Name>
+                <Phone>{data.result.address}</Phone>
+              </Box>
+              <TownName>{data.result.nickname}</TownName>
+              <Town>님이 찜한 가게</Town>
+              <ScrollBox>
+                {/* 연동 */}
+                <PostBox
+                  key={data.store_id}
+                  onClick={() => onClickDetail(data.store_id)}
+                >
+                  <PostImg>
+                    <img
+                      //   src={`${process.env.PUBLIC_URL}/images/imgupload_post1.svg`}
+                      src={bread}
+                      alt="Profile"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }} // 이미지 크기와 픽셀 사용 방식 설정
+                    />
+                  </PostImg>
+                  <Name_b>{data.store_name}</Name_b>
+                  <Address>{data.address}</Address>
+                  <Heart>
+                    <img src={heart} />
+                  </Heart>
+                </PostBox>
+              </ScrollBox>
+              <BottomBar>
+                <BottomName>
+                  <img src={bv} />
+                </BottomName>
+                <Content>우리가 왜 사용해야할까?</Content>
+                <Content2>그 해답은 클릭하여 확인해 주세요</Content2>
+              </BottomBar>
+            </>
+          ))}
       </Container>
     </motion.div>
   );
 }
+
 export default Mypage;

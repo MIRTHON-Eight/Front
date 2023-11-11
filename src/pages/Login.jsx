@@ -71,7 +71,7 @@ const Write = styled.div`
   font-weight: 650;
   color: #696969;
 
-  p2 {
+  .link {
     cursor: pointer;
     margin-right: 10px;
     &:hover {
@@ -94,9 +94,51 @@ const Button = styled.button`
 
 function Login() {
   const navigate = useNavigate();
-
   const handleLoginClick = () => {
     navigate("/Signup");
+  };
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async () => {
+    if (!userName || !password) {
+      alert("아이디와 비밀번호를 입력해주세요.");
+      return; // Stop further execution
+    }
+
+    try {
+      const response = await axios.post(
+        "http://13.124.196.200:8081/api/login",
+        {
+          password: password,
+          userName: userName,
+        }
+      );
+
+      const isSuccess = response.data.isSuccess;
+      if (isSuccess) {
+        const memberid = response.data.result.memberId; // 아이디 받기
+        localStorage.setItem("memberid", memberid); // 아이디 저장
+        const token = response.data.result.token; // 토큰 받기
+        localStorage.setItem("token", token); // 토큰 저장
+        navigate("/"); // 로그인하면 홈 페이지 이동
+      } else {
+        // Handle login failure
+        const errorCode = response.data.code;
+        const errorMessage = response.data.message;
+
+        if (errorCode === 404) {
+          alert("존재하지 않은 아이디입니다.");
+        } else if (errorCode === 401) {
+          alert("잘못된 비밀번호입니다.");
+        } else {
+          alert(`로그인 실패: ${errorMessage}`);
+        }
+      }
+    } catch (error) {
+      alert("아이디와 비밀번호를 다시 확인해주세요.");
+      console.error("로그인 실패:", error);
+    }
   };
 
   return (
@@ -112,15 +154,26 @@ function Login() {
         </Top>
         <Input>
           <p>아이디</p>
-          <input type="text" placeholder="아이디를 입력해주세요." />
+          <input
+            type="text"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+            placeholder="아이디를 입력해주세요."
+          />
           <p>비밀번호</p>
-          <input type="text" placeholder="비밀번호를 입력해주세요." />
+          <input
+            type="text"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="비밀번호를 입력해주세요."
+          />
         </Input>
-        <Link to={"/"}>
-          <Button>로그인</Button>
-        </Link>
+        <Button onClick={handleLogin}>로그인</Button>
+
         <Write>
-          <p2 onClick={handleLoginClick}>회원가입</p2>
+          <span className="link" onClick={handleLoginClick}>
+            회원가입
+          </span>
         </Write>
       </Container>
     </motion.div>

@@ -12,7 +12,6 @@ import bv from "../assets/bv.png";
 import closingsale from "../assets/마감세일사진.png";
 import gift from "../assets/수능선물.jpg";
 import milk from "../assets/우유빵.png";
-import cart from "../assets/cart.png";
 
 const Top = styled.div`
   display: flex;
@@ -21,47 +20,16 @@ const Top = styled.div`
   margin-left: -250px;
 
   img {
-    width: 8rem;
-    height: 4.3rem;
+    width: 8.8rem;
+    height: 4.8rem;
   }
 `;
-
-// const Write = styled.div`
-//   margin-left: 8rem;
-//   margin-top: -35px;
-//   font-size: 0.9rem;
-//   font-weight: 650;
-//   color: #ff8c00;
-
-//   p1 {
-//     cursor: pointer;
-//     margin-right: 2px;
-//     &:hover {
-//       text-decoration: underline;
-//     }
-//   }
-//   p2 {
-//     cursor: pointer;
-//     margin-left: -8px;
-//     &:hover {
-//       text-decoration: underline;
-//     }
-//   }
-//   p3 {
-//     cursor: pointer;
-//     margin-right: 10px;
-//     &:hover {
-//       text-decoration: underline;
-//     }
-//   }
-// `;
-
 const HomeImg = styled.div`
   position: relative;
-  left: 150px;
-  top: -47px;
+  left: 155px;
+  top: -55px;
   img {
-    width: 30px;
+    width: 38px;
     cursor: pointer;
   }
 `;
@@ -74,7 +42,7 @@ const Adver = styled.div`
   border-radius: 1rem;
   box-shadow: 1px 4px 6px rgba(102, 102, 102, 0.2);
   width: 22.2rem;
-  margin-top: -15px;
+  margin-top: -25px;
 
   div {
     display: flex;
@@ -305,6 +273,7 @@ function Home() {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
+        const memberid = localStorage.getItem("memberid");
         const response = await axios.get(
           "http://13.124.196.200:8081/api/bakery",
           {
@@ -317,6 +286,7 @@ function Home() {
 
         console.log("Received data from API:", response.data);
         console.log(token);
+        console.log(memberid);
         setDatas(response.data.result);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -330,6 +300,12 @@ function Home() {
     navigate(`/detail/${store_id}`); // 해당 게시글의 ID를 URL에 포함하여 이동
   };
 
+  //회원 정보에 따라 마이페이지 내용 변경
+  const memberid = localStorage.getItem("memberid");
+  const onClickMy = () => {
+    navigate(`/Mypage/${memberid}`);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -340,10 +316,8 @@ function Home() {
         <Top>
           <img src={logo} alt="Bver" />
         </Top>
-        <HomeImg>
-          <Link to="/Mypage">
-            <img src={account} alt="account" />
-          </Link>
+        <HomeImg key={memberid} onClick={onClickMy}>
+          <img src={account} alt="account" />
         </HomeImg>
 
         {/* 광고 */}
