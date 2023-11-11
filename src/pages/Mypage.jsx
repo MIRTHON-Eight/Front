@@ -77,18 +77,21 @@ const Phone = styled.div`
 `;
 
 const TownName = styled.div`
+  position: relative;
   font-size: 16px;
   font-weight: 600;
   margin-left: -290px;
   margin-top: 30px;
   margin-bottom: 0px;
   text-align: left;
+  padding-right: 20px;
 `;
 
 const Town = styled.div`
+  position: relative;
   font-size: 12px;
   margin-top: -18px;
-  margin-left: -166px;
+  margin-left: -190px;
   text-align: left;
 `;
 
@@ -195,7 +198,7 @@ function Mypage() {
   };
 
   // 백엔드 연동 axios.get
-  const [datas, setDatas] = useState([]);
+  const [data, setData] = useState(null); // 단일 객체를 받기 위해 배열이 아닌 객체로 변경
   const { memberid } = useParams();
   useEffect(() => {
     const fetchData = async () => {
@@ -213,7 +216,7 @@ function Mypage() {
 
         console.log("Received data from API:", response.data);
         console.log(token);
-        setDatas(response.data.result);
+        setData(response.data.result); // 배열이 아닌 객체로 설정한 경우 변경
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -233,58 +236,57 @@ function Mypage() {
       exit={{ opacity: 0 }}
     >
       <Container>
-        {datas.length > 0 &&
-          datas.map((data) => (
-            <>
-              <Back onClick={handleHomeClick}>
-                <img src={back} alt="back" />
-              </Back>
-              <Logo>
-                <img src={logo} alt="Bver" />
-              </Logo>
-              <Box>
-                <Profile>
-                  <img src={account} />
-                </Profile>
-                <Name>{data.result.nickname}</Name>
-                <Phone>{data.result.address}</Phone>
-              </Box>
-              <TownName>{data.result.nickname}</TownName>
-              <Town>님이 찜한 가게</Town>
-              <ScrollBox>
-                {/* 연동 */}
-                <PostBox
-                  key={data.store_id}
-                  onClick={() => onClickDetail(data.store_id)}
-                >
-                  <PostImg>
-                    <img
-                      //   src={`${process.env.PUBLIC_URL}/images/imgupload_post1.svg`}
-                      src={bread}
-                      alt="Profile"
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }} // 이미지 크기와 픽셀 사용 방식 설정
-                    />
-                  </PostImg>
-                  <Name_b>{data.store_name}</Name_b>
-                  <Address>{data.address}</Address>
-                  <Heart>
-                    <img src={heart} />
-                  </Heart>
-                </PostBox>
-              </ScrollBox>
-              <BottomBar>
-                <BottomName>
-                  <img src={bv} />
-                </BottomName>
-                <Content>우리가 왜 사용해야할까?</Content>
-                <Content2>그 해답은 클릭하여 확인해 주세요</Content2>
-              </BottomBar>
-            </>
-          ))}
+        {data && (
+          <>
+            <Back onClick={handleHomeClick}>
+              <img src={back} alt="back" />
+            </Back>
+            <Logo>
+              <img src={logo} alt="Bver" />
+            </Logo>
+            <Box>
+              <Profile>
+                <img src={account} />
+              </Profile>
+              <Name>{data.nickname}</Name>
+              <Phone>{data.address}</Phone>
+            </Box>
+            <TownName>{data.nickname}</TownName>
+            <Town>님이 찜한 가게</Town>
+            <ScrollBox>
+              {/* 연동 */}
+              <PostBox
+                key={data.store_id}
+                onClick={() => onClickDetail(data.store_id)}
+              >
+                <PostImg>
+                  <img
+                    //   src={`${process.env.PUBLIC_URL}/images/imgupload_post1.svg`}
+                    src={bread}
+                    alt="Profile"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }} // 이미지 크기와 픽셀 사용 방식 설정
+                  />
+                </PostImg>
+                <Name_b>{data.store_name}</Name_b>
+                <Address>{data.address}</Address>
+                <Heart>
+                  <img src={heart} />
+                </Heart>
+              </PostBox>
+            </ScrollBox>
+            <BottomBar>
+              <BottomName>
+                <img src={bv} />
+              </BottomName>
+              <Content>우리가 왜 사용해야할까?</Content>
+              <Content2>그 해답은 클릭하여 확인해 주세요</Content2>
+            </BottomBar>
+          </>
+        )}
       </Container>
     </motion.div>
   );
