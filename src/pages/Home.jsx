@@ -304,8 +304,9 @@ function Home() {
   }, []);
 
   // 빵집 박스 클릭하면 해당 id의 빵집 세부로 넘어가도록
+  const member_id = JSON.parse(localStorage.getItem('memberid'))
   const onClickDetail = (store_id) => {
-    navigate(`/detail/${store_id}`); // 해당 게시글의 ID를 URL에 포함하여 이동
+    navigate(`/detail/${member_id}/${store_id}`); // 해당 게시글의 ID를 URL에 포함하여 이동
   };
 
   //회원 정보에 따라 마이페이지 내용 변경
